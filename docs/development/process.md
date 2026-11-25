@@ -29,6 +29,10 @@ Nobody starts on an empty slate: a human always finds a spec, a plan or a branch
 - `business-review-required`: the merge additionally waits for a PO approval (visible UX changes).
 - `master` is protected: PR, one approval, all checks green, every thread resolved. Agents can never merge.
 - Workflow files (`.github/workflows/`) can only be changed by humans; agents escalate with `stage:hilfe`.
+- Branches are named `dev-<issue>-<topic>`; the `PR process` check rejects other names, including the factory's
+  default `factory/issue-<n>-<hash>`.
+- Factory phases start only with their `stage:*` label and never while `Specification Request` is set, so moving a
+  card in the Factory UI cannot skip the board gates.
 
 ## Team cycle
 

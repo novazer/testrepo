@@ -18,6 +18,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
+      - name: Branch name
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: |
+          if ! echo "$BRANCH_NAME" | grep -Eq '^dev-[0-9]+-[a-z0-9-]+$'; then
+            echo "::error::Branch '$BRANCH_NAME' must be named dev-<issue>-<topic> (docs/development/process.md)."
+            exit 1
+          fi
       - name: Branch document
         env:
           BRANCH_NAME: ${{ github.head_ref }}
