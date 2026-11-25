@@ -18,6 +18,13 @@ describe('app', () => {
     expect(await response.json()).toEqual({ message: 'Hello, World!' });
   });
 
+  it('answers /healthz with 200 ok', async () => {
+    const response = await fetch(`${baseUrl}/healthz`);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toMatch(/^text\/plain/);
+    expect(await response.text()).toBe('ok');
+  });
+
   it('answers unknown paths with 404', async () => {
     expect((await fetch(`${baseUrl}/nope`)).status).toBe(404);
   });
