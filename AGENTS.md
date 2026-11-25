@@ -11,21 +11,21 @@ software factory proof of concept runs against the same process. Agents and huma
 
 ## Process
 
-- Read `docs/development/process.md` before starting. It maps every board lane to the factory phase that
-  works on it and names the human hand-over points.
-- Every PR links an issue: `Closes #123`, or `Part of #123: reason` for a small technical change
-  (`docs/development/issue_triage.md`). Never start implementation without a triage-complete issue.
-- Ask specification questions on the issue and set the label `Specification Request`; stop and wait for the
-  PO's answer instead of guessing.
+- Read `docs/development/process.md` first. It defines the stages (Idee → Spezifikation → Bereit → Planung →
+  Umsetzung → Review → Abnahme), the human gates, and the `stage:*` labels.
+- Work only in the stage your card is in: specify in `Spezifikation`, plan in `Planung`, implement in `Umsetzung`.
+- Never start implementation without a spec the PO approved (Management Summary, acceptance criteria,
+  `Priority`, `Effort`). Ask specification questions on the issue with the label `Specification Request` and stop.
 - Never commit to `master`. Work on `dev-<issue>-<short-topic>`, for example `dev-12-health-endpoint`.
 - Every branch has a branch document `docs/branch-docs/<branch>.md` (`docs/development/branch_documents.md`).
-  The `PR process` check fails without it.
-- Open the PR as a draft. Mark it ready only when CI is green and the description holds the self-check and
-  the steps under "How to verify" (`docs/development/review_process.md`).
-- Never assign or request a reviewer. Reviewers add themselves.
-- A human may push commits to your branch at any time. Always `git pull --rebase` before you continue, keep
-  their commits, and never force-push a branch under review.
-- When a change visibly reworks the UI, say so in the PR; the PO decides on the label `business-review-required`.
+- Every PR links its issue: `Closes #123`, or `Part of #123: reason` for a small technical change.
+- Open the PR as a draft; mark it ready (`gh pr ready`) when CI is green and the description holds the
+  self-check and "How to verify". Never assign or request reviewers.
+- A human may push commits to your branch at any time. Pull before you continue, keep their commits, never
+  force-push a branch under review.
+- Stuck (CI red three times, a missing permission such as workflow files, an unclear requirement): push what
+  you have, comment exactly what a human must do, add the label `stage:hilfe` and stop.
+- Visible UI changes: recommend `business-review-required` in the spec; the PO decides.
 
 ## Code expectations
 

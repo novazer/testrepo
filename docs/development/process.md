@@ -1,56 +1,51 @@
-# Development Process (Factory PoC)
+# Development Process (AI Software Factory)
 
-The process of the Digital Grid monorepo, with a software factory doing the first pass of every step.
-Humans never start on an empty slate: they check out the branch an agent already worked on, test it,
-improve it, and hand it back.
+Every ticket runs through the same stages. Agents do the first pass of specification, planning and
+implementation; humans decide at three gates: **spec approval**, **code review** and **acceptance**.
+Nobody starts on an empty slate: a human always finds a spec, a plan or a branch to judge or improve.
 
-## Roles
+## Stages
 
-| Role  | Who                        | In the factory                                                                          |
-| ----- | -------------------------- | --------------------------------------------------------------------------------------- |
-| PO    | product owner team         | triages the Inbox, answers `Specification Request`, approves plans, accepts after merge |
-| DEV   | developer team             | takes over agent branches, pushes improvements, hands back with a PR comment            |
-| PEER  | another DEV                | reviews ready PRs; reviewers add themselves                                             |
-| Agent | the factory's coding agent | plans, implements, answers review comments, keeps CI green                              |
+| Board lane = Factory phase | Who works                                                                                                                                                                                         | Exit gate                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `Idee`                     | anyone, form "Idee" (two or three sentences)                                                                                                                                                      | PO pulls the idea into `Spezifikation`                                                                |
+| `Spezifikation`            | agent (`factory-spec`): Management Summary, Given/When/Then acceptance criteria, out of scope, duplicates, priority and effort proposal; open questions go to the PO with `Specification Request` | **PO approves** (Definition of Ready), sets `Priority` and `Effort`, moves the issue to `Bereit`      |
+| `Bereit`                   | PO keeps the lane sorted by priority                                                                                                                                                              | the team pulls the top issue into `Planung` when a WIP slot is free                                   |
+| `Planung`                  | agent (`factory-plan`): implementation plan with files, tests, risks, size check                                                                                                                  | **Dev approves the plan** in Factory. `plan:auto` (Effort Low, no `risk:high`) approves it on its own |
+| `Umsetzung`                | agent (`factory-build`), autonomous: branch, code, tests, branch document, draft PR, CI green, then ready for review                                                                              | automatic when the PR leaves draft                                                                    |
+| `Hilfe nötig`              | a dev takes over the branch the agent left, does what it asked for, and moves the issue back to `Umsetzung`                                                                                       | dev hands back                                                                                        |
+| `Review`                   | dev reviews and tests the preview; the agent answers review comments and picks up pushed commits                                                                                                  | **approval and merge by a human**                                                                     |
+| `Abnahme`                  | PO tests on QA; the agent provides test notes                                                                                                                                                     | PO moves the issue to `Done`                                                                          |
 
-## Board lanes and factory phases
+`Later` holds consciously deferred ideas.
 
-| Board lane                  | Who acts                                                                                   | Factory phase                |
-| --------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------- |
-| `Inbox`                     | PO triages: Priority, Effort, Management Summary complete                                  | card waits in `Intake`       |
-| `Product Backlog`           | PO sorts by priority                                                                       | card waits in `Intake`       |
-| `Sprint Backlog`            | **intake:** moving an issue here hands it to the factory (the bridge sets `factory:ready`) | `Planning` starts on its own |
-| `In Progress`               | agent builds; DEV takes over, improves, hands back                                         | `Building`, then `Review`    |
-| `To be tested by PQSYS`     | PO accepts on QA after the merge                                                           | `Done`                       |
-| `Done this sprint` / `Done` | release                                                                                    | `Done`                       |
+## Gates and labels
 
-GitHub moves an issue to `In Progress` when a PR links it, and to `To be tested by PQSYS` when that PR is
-merged (project workflows).
+- Humans move issues on the board. The board bridge mirrors the lane into a `stage:*` label, and Factory moves
+  its card to the matching phase. Agents signal back the same way: `stage:hilfe` moves the lane to `Hilfe nötig`.
+- `Specification Request`: the agent stops until the PO answers and removes the label.
+- `plan:auto`: set by the bridge for Effort `Low` without `risk:high`; Factory approves such plans on its own.
+- `risk:high`: forces a human plan approval regardless of size (security, data migration, public API).
+- `business-review-required`: the merge additionally waits for a PO approval (visible UX changes).
+- `master` is protected: PR, one approval, all checks green, every thread resolved. Agents can never merge.
+- Workflow files (`.github/workflows/`) can only be changed by humans; agents escalate with `stage:hilfe`.
 
-## Steps
+## Team cycle
 
-1. **Issue.** A ticket issuer creates the issue from an issue form. It starts with a Management Summary and a
-   justified priority proposal ([Issue triage](issue_triage.md)). It lands in `Inbox`.
-2. **Triage.** The PO sets `Priority` and `Effort` and moves the issue to `Product Backlog`, `Sprint Backlog`,
-   `Later`, or closes it with a reason.
-3. **Intake.** Moving an issue to `Sprint Backlog` hands it to the factory. The agent reads the issue and the
-   repository, asks open questions on the issue with the label `Specification Request`, and posts a plan.
-4. **Plan approval (human).** A DEV or the PO approves the plan in the factory, or asks for a revision.
-5. **Implementation (agent).** The agent creates `dev-<issue>-<topic>`, the branch document, the code and tests,
-   and opens a draft PR that closes the issue. CI runs the code checks, unit tests, licence check, the image
-   build with a simulated preview deployment, and the `PR process` check.
-6. **Take-over (human).** A DEV checks out the branch, tests the preview, pushes improvements, and leaves PR
-   comments for what the agent should do next. The agent picks up the comments and the new commits.
-7. **Ready for review.** When CI is green and the description holds the self-check and "How to verify", the
-   PR leaves draft. A PEER adds themself as reviewer, reviews, and approves or requests changes; the agent
-   answers review comments, the reviewer resolves their threads ([Review process](review_process.md)).
-8. **Merge (human).** After approval and with every thread resolved, a DEV merges. The issue moves to
-   `To be tested by PQSYS`, where the PO accepts it.
+- **Kanban with WIP limits** instead of sprint commitments. Review is the bottleneck: at most 3 issues in
+  `Review` and 2 in `Hilfe nötig`; agents do not start new plans while review is full.
+- **Roles**
+  - PO: owns `Idee` → `Bereit` (spec approval) and `Abnahme`.
+  - Developers: approve plans, take over `Hilfe nötig`, review.
+  - Factory operator (rotates weekly): watches stuck cards and failed runs, keeps skills and `AGENTS.md` current.
+- **Rhythm**
+  - Daily: empty the human queues first (plans to approve, `Hilfe nötig`, `Review`), then pull new work.
+  - Weekly, 30 minutes: spec round (PO + one dev) over `Idee` and `Spezifikation`.
+  - Weekly, 30 minutes: factory retro with the numbers below; every recurring review finding becomes a rule in
+    `AGENTS.md` or a skill ("fix the factory, not only the product").
+- **Numbers**: lead time per stage, share of issues merged without `Hilfe nötig`, review rounds per PR,
+  questions per spec, rework after acceptance.
 
-## Rules that keep humans in the loop
+## Release
 
-- `master` is protected: a PR, one approval, and the checks `Code checks`, `Unit tests`, `License check`,
-  `Build Packages` and `PR process` are required. Agents can never merge.
-- Agents never request reviewers and never resolve a reviewer's thread.
-- A `Specification Request` stops the agent until the PO answers and removes the label.
-- The label `business-review-required` makes the merge wait for a PO approval.
+Unchanged: the PO declares a code freeze, accepts the issues in `Abnahme`, and a release is cut from `master`.

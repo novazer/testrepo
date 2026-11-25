@@ -20,10 +20,15 @@ issue forms in `.github/ISSUE_TEMPLATE/` (Bug, Feature, Technical Task).
 XS (< ½ day), S (~1 day), M (~3 days), L (~1 week), XL (> 1 week: split it). The organisation issue field
 `Effort` maps XS/S → `Low`, M → `Medium`, L/XL → `High`.
 
+## Definition of Ready
+
+An issue may leave `Spezifikation` only when it has a Management Summary, testable acceptance criteria, an
+out-of-scope section, and the PO has set `Priority` and `Effort`. The spec agent drafts all of it; the PO decides.
+
 ## Intake triage
 
-Every `Inbox` issue gets one decision: **Immediate** → `Sprint Backlog`, **Scheduled** → `Product Backlog`,
-**Deferred** → `Later` with a date, **Rejected** → closed with a reason.
+The PO looks at `Idee` in the weekly spec round. Every idea gets one decision: **Specify** → `Spezifikation`,
+**Deferred** → `Later` with a date, **Rejected** → closed with a reason. Urgent bugs (P0/P1) skip the round.
 
 ## Small technical changes
 
