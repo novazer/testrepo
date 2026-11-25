@@ -1,0 +1,105 @@
+name: Technical Task
+description: Technische Arbeit für Infrastruktur, Architektur, Migration, Wartung oder Team-Enablement
+projects: ["novazer/3"]
+type: task
+
+title: "TASK: "
+
+body:
+  - type: textarea
+    id: management_summary
+    attributes:
+      label: Management Summary
+      description: Welche technische Arbeit ist nötig, wen oder was betrifft sie und welches Ergebnis soll erreicht sein? Zwei bis drei Sätze genügen.
+      placeholder: |
+        Arbeit:
+        Betroffene Teams oder Systeme:
+        Gewünschtes Ergebnis:
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        TASK-Priorität wird vom Entwicklungsteam mit konkretem technischem Nutzen oder Risiko begründet. P0–P3 beschreibt Dringlichkeit; Tasks erhalten keine RICE-Bewertung.
+  - type: textarea
+    id: technical_benefit_risk
+    attributes:
+      label: Konkreter technischer Nutzen oder Risiko
+      description: Welchen konkreten Nutzen oder welches Risiko adressiert die Arbeit? Was passiert, wenn sie nicht umgesetzt wird?
+      placeholder: Technische Folge oder "noch unklar"; reine Präferenz genügt nicht.
+    validations:
+      required: true
+  - type: textarea
+    id: affected_teams_systems
+    attributes:
+      label: Betroffene Teams und Systeme
+      description: Welche Teams, Produkte, Repositories, Dienste oder Abläufe sind betroffen?
+      placeholder: Benenne Betroffene oder "noch unklar".
+    validations:
+      required: true
+  - type: textarea
+    id: workaround_cost
+    attributes:
+      label: Workaround und laufende Kosten
+      description: Wie wird die Situation derzeit bewältigt? Beschreibe wiederkehrenden Zeitaufwand, Blockaden, Betriebsrisiken oder fehlende Ergebnisse.
+      placeholder: Beschreibe Workaround und Kosten, "kein Workaround" oder "noch unklar".
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Umfang und Abgrenzung
+      description: Was ist Teil dieser Arbeit und was bleibt ausdrücklich außerhalb des Umfangs?
+      placeholder: Wenn die Abgrenzung offen ist, bitte "noch unklar" angeben.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Akzeptanzkriterien
+      description: Woran lässt sich nach Umsetzung objektiv erkennen, dass das technische Ziel erreicht wurde?
+      placeholder: Formuliere überprüfbare Ergebnisse oder "noch unklar".
+    validations:
+      required: true
+  - type: input
+    id: effort_person_days
+    attributes:
+      label: Geschätzter Gesamtaufwand (Personentage)
+      description: Positive Gesamtschätzung für Entwicklung, Tests und Dokumentation. Keine Zahl erfinden; bei unbekanntem Aufwand "noch unklar" eintragen.
+      placeholder: "noch unklar"
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Abhängigkeiten
+      description: Welche vorgelagerten Arbeiten, Entscheidungen, Teams oder externen Voraussetzungen sind nötig?
+      placeholder: Benenne Abhängigkeiten, "keine bekannt" oder "noch unklar".
+    validations:
+      required: true
+  - type: dropdown
+    id: priority_proposal
+    attributes:
+      label: Prioritätsvorschlag
+      description: Das Entwicklungsteam begründet die technische Dringlichkeit anhand von Blockaden, Zuverlässigkeit, Risiko und Teamproduktivität. Effort ist davon getrennt; Details stehen in docs/development/issue_triage.md.
+      options:
+        - "P0 – Kritisch"
+        - "P1 – Hoch"
+        - "P2 – Mittel"
+        - "P3 – Niedrig"
+        - "noch unklar (bitte in der Triage bewerten)"
+    validations:
+      required: true
+  - type: textarea
+    id: priority_rationale
+    attributes:
+      label: Begründung der Priorität
+      description: Warum ist diese Dringlichkeit angesichts der konkreten technischen Folge angemessen? Eine hohe technische Priorität reserviert nicht automatisch Sprintkapazität.
+      placeholder: Begründe die Priorität oder gib "noch unklar" an.
+    validations:
+      required: true
+  - type: textarea
+    id: additional_information
+    attributes:
+      label: Zusätzliche Informationen
+      description: Links, Fehlerprotokolle, technische Hintergründe oder relevante Issue-Verknüpfungen.

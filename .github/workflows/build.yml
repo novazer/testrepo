@@ -1,0 +1,80 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [master, 'dev-*']
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code-checks:
+    name: Code checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - run: corepack enable && yarn install --immutable
+      - run: yarn typecheck
+      - run: yarn format:check
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - run: corepack enable && yarn install --immutable
+      - run: yarn test
+
+  license-check:
+    name: License check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - run: corepack enable && yarn install --immutable
+      - run: yarn check:licenses
+
+  build-packages:
+    name: Build Packages
+    needs: [code-checks, unit-tests, license-check]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build docker image
+        run: docker build -t testrepo:${{ github.sha }} .
+      - name: Smoke test image
+        run: |
+          docker run -d --rm -p 3000:3000 --name smoke testrepo:${{ github.sha }}
+          for i in $(seq 1 20); do curl -fs http://localhost:3000/api/hello && break; sleep 1; done
+          docker stop smoke
+      - name: Deploy preview (simulated)
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          slug="dev-$(echo "$HEAD_REF" | tr '[:upper:]' '[:lower:]' | sed -E 's#^dev-##; s#[^a-z0-9]+#-#g; s#^-|-$##g' | cut -c1-40)"
+          url="https://${slug}.testrepo.dev.example.com"
+          echo "Simulated preview deployment: $url" >> "$GITHUB_STEP_SUMMARY"
+          marker='<!-- preview-deployment -->'
+          body="$marker
+          Preview (simulated): $url"
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$existing" -f body="$body" > /dev/null
+          else
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body "$body"
+          fi

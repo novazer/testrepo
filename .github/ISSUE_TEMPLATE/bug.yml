@@ -1,0 +1,175 @@
+name: Bug Report
+description: Dieses Template vereinheitlicht das Erstellen von Bugtickets.
+projects: ["novazer/3"]
+type: bug
+
+#title: "[Bug]: "
+#labels: []
+#assignees: []
+
+body:
+  - type: textarea
+    id: management_summary
+    attributes:
+      label: Management Summary
+      description: Worum geht es, wen betrifft es und was soll am Ende erreicht sein? Zwei bis drei Sätze genügen.
+      placeholder: |
+        Worum geht es:
+        Wen betrifft es:
+        Gewünschtes Ergebnis:
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "Sehr gut! Du hast einen Fehler gefunden und möchtest uns bei dessen Beseitigung helfen. Fülle die folgenden Felder aus und sende das Ticket ab."
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Was ist passiert?
+      description: Beschreibe wie man zu dem dargestellten Verhalten kommt. Hier kann auch gerne ein .gif verwendet werden.
+    validations:
+      required: true
+  - type: textarea
+    id: what-expected
+    attributes:
+      label: Was wird erwartet?
+      description: Erkläre, wie du dir den Sollzustand vorstellst?
+  - type: dropdown
+    id: aufgetreten_in
+    attributes:
+      label: Aufgetreten in
+      multiple: false
+      options:
+        - QA
+        - Release
+    validations:
+      required: true
+  - type: input
+    id: versionsnummer
+    attributes:
+      label: Versionsnummer
+      description: "Welche explizite Version wurde zum Test eingesetzt? (Beispiel: w-2.0.0 oder 2.0.0-b9346b8ae8a06662f0046d6524ecfe94630ef764)"
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Auswirkung
+      description: Was passiert, wenn wir den Fehler nicht beheben? Ohne genannte Folge lässt sich das Ticket nicht gegen andere abwägen.
+      placeholder: |
+        z.B. Auswertung kann nicht erstellt werden, Daten fehlen im Report, nur optische Abweichung
+    validations:
+      required: true
+  - type: dropdown
+    id: affected_scope
+    attributes:
+      label: Betroffene
+      description: Wie viele Nutzer oder Kunden sind betroffen?
+      options:
+        - "noch unklar"
+        - "Nur intern"
+        - "Einzelner Kunde"
+        - "Mehrere Kunden"
+        - "Alle Kunden"
+    validations:
+      required: true
+  - type: dropdown
+    id: workaround
+    attributes:
+      label: Workaround vorhanden?
+      description: Gibt es einen zumutbaren Weg, den Fehler vorläufig zu umgehen?
+      options:
+        - "noch unklar"
+        - "Ja, Workaround vorhanden"
+        - "Nein, kein Workaround"
+        - "Nicht zutreffend"
+    validations:
+      required: true
+  - type: dropdown
+    id: priority_proposal
+    attributes:
+      label: Prioritätsvorschlag
+      description: Der PO legt die Produktpriorität in der Triage fest. Berücksichtige Schwere der Einschränkung, betroffene Kunden und Workarounds; Details zur P0–P3-Skala stehen in docs/development/issue_triage.md.
+      options:
+        - "P0 – Kritisch"
+        - "P1 – Hoch"
+        - "P2 – Mittel"
+        - "P3 – Niedrig"
+        - "noch unklar (bitte in der Triage bewerten)"
+    validations:
+      required: true
+  - type: textarea
+    id: priority_rationale
+    attributes:
+      label: Begründung der Priorität
+      description: Warum ist diese Priorität angemessen? Beziehe dich auf Auswirkung, Dringlichkeit, Betroffene und Risiken.
+      placeholder: |
+        z.B. Betrifft alle Kunden und es gibt keinen Workaround, daher P1.
+        z.B. Nur Kosmetik, bisher von keinem Kunden gemeldet, daher P3.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## Optionale RICE-Einschätzung
+
+        RICE ist eine optionale Vergleichshilfe und ändert die separate Dringlichkeitseinstufung P0–P3 nicht. Es gibt keine automatische Zuordnung von einem RICE-Score zu einer Priorität.
+
+        Reach ist der Prozentsatz (0–100) **aller aktiven Kundenorganisationen**, die voraussichtlich innerhalb der nächsten 12 Monate profitieren. Zähle Organisationen, nicht Nutzer; gemeinsam genutzter Code bedeutet nicht automatisch 100 % Reach. Halte Schätzbasis und Stichtag fest.
+
+        Confidence ist eine Zahl von 0 bis 1 und beschreibt die Evidenz für den erwarteten Nutzen und Reach, nicht nur die Sicherheit über die technische Ursache. Effort ist der positive Gesamtaufwand in Personentagen für Entwicklung, Tests und Dokumentation.
+
+        Formel: `ReachPercentagePoints × Impact × ConfidenceFraction / EffortPersonDays`. Die Form berechnet keinen Score. Berechne ihn nur, wenn alle Werte, die Reach-Basis mit Stichtag und die Impact-Begründung bekannt sind. Der Score ist nicht gedeckelt und nicht mit RICE-Bewertungen auf Basis absoluter Reach-Zahlen vergleichbar.
+  - type: input
+    id: rice_reach
+    attributes:
+      label: Reach (% aller aktiven Kundenorganisationen)
+      description: Geschätzter Prozentanteil (0–100), der innerhalb der nächsten 12 Monate profitiert; bei unbekanntem Wert "noch unklar" eintragen. Nicht aus gemeinsam genutztem Code ableiten.
+      placeholder: "noch unklar"
+  - type: input
+    id: rice_reach_basis
+    attributes:
+      label: Reach-Basis und Stichtag
+      description: Welche Daten oder Annahmen stützen die Reach-Schätzung, und auf welchen Stichtag bezieht sie sich?
+      placeholder: "noch unklar"
+  - type: input
+    id: rice_confidence
+    attributes:
+      label: Confidence (0–1)
+      description: Evidenz für erwarteten Nutzen und Reach; nicht nur technische Ursachensicherheit. Bei unbekanntem Wert "noch unklar" eintragen.
+      placeholder: "noch unklar"
+  - type: input
+    id: rice_effort_person_days
+    attributes:
+      label: Effort (positive Personentage)
+      description: Gesamter Entwicklungs-, Test- und Dokumentationsaufwand in Personentagen. Keine Zahl erfinden; bei unbekanntem Aufwand "noch unklar" eintragen.
+      placeholder: "noch unklar"
+  - type: markdown
+    attributes:
+      value: |
+        Impact bewertet die Stärke des Nutzens pro erreichter Kundenorganisation und berücksichtigt zumutbare Workarounds.
+
+        | Wert | Kalibrierung |
+        | --- | --- |
+        | 0.25 | Minimal: Kosmetik oder kleine Bequemlichkeit, ohne wesentlichen Effekt auf Ergebnis oder Aufwand |
+        | 0.5 | Niedrig: merkliche Bequemlichkeit; der bestehende Ablauf bleibt ohne Weiteres akzeptabel |
+        | 1 | Bedeutend: erheblicher, wiederkehrender Workflow-Nutzen; das Ziel bleibt mit vertretbarem Aufwand erreichbar |
+        | 2 | Hoch: wichtiger Workflow stark eingeschränkt, hoher Workaround-Aufwand oder unvollständige Ergebnisse |
+        | 3 | Sehr hoch: zentrales Ziel ohne akzeptable Alternative unmöglich oder Verhinderung gravierend falscher Ergebnisse |
+  - type: dropdown
+    id: rice_impact
+    attributes:
+      label: Impact pro erreichter Kundenorganisation
+      description: Optionale Einschätzung gemäß der direkt darüberstehenden Kalibrierung.
+      options:
+        - "0.25"
+        - "0.5"
+        - "1"
+        - "2"
+        - "3"
+        - "noch unklar"
+  - type: textarea
+    id: rice_impact_rationale
+    attributes:
+      label: Begründung des RICE-Impact
+      description: Begründe die Stärke des Nutzens pro erreichter Kundenorganisation und berücksichtige Workarounds. Optional; bei unbekanntem Impact nicht raten.

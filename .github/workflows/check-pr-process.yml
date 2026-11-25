@@ -1,0 +1,46 @@
+name: Check PR process
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+    branches: [master]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  pr-process:
+    name: PR process
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - name: Branch document
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: node scripts/checkBranchDoc.ts
+      - name: Linked, triage-complete issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.pull_request.body ?? '';
+            const closing = [...body.matchAll(/\b(?:closes|fixes|resolves)\s+#(\d+)/gi)].map((m) => Number(m[1]));
+            const partOf = [...body.matchAll(/\bPart of #(\d+):\s*\S+/g)].map((m) => Number(m[1]));
+            const numbers = [...new Set([...closing, ...partOf])];
+            if (numbers.length === 0) {
+              core.setFailed('Link an issue with "Closes #123" or "Part of #123: reason" (docs/development/issue_triage.md).');
+              return;
+            }
+            for (const issue_number of numbers) {
+              const { data: issue } = await github.rest.issues.get({ ...context.repo, issue_number });
+              if (issue.pull_request) {
+                core.setFailed(`#${issue_number} is a pull request, not an issue.`);
+              } else if (!/Management Summary/i.test(issue.body ?? '')) {
+                core.setFailed(`#${issue_number} has no Management Summary; finish triage first.`);
+              } else {
+                core.info(`#${issue_number} is linked and triage-complete.`);
+              }
+            }
