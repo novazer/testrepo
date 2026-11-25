@@ -1,0 +1,40 @@
+name: Idee
+description: Eine grobe Idee, ein Wunsch oder eine technische Aufgabe. Der Spezifikations-Agent arbeitet sie aus.
+projects: ["novazer/3"]
+title: "Idee: "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Zwei, drei Sätze genügen. Sobald der PO die Idee nach „Spezifikation“ zieht, schreibt ein Agent die Spezifikation
+        (Management Summary, Akzeptanzkriterien, Priorität, Aufwand) und fragt nach, wenn etwas offen ist.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem oder Wunsch
+      description: Was stört, fehlt oder soll besser werden – und für wen?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Gewünschtes Ergebnis
+      description: Woran merkt man, dass es gelöst ist?
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Art
+      options:
+        - Feature
+        - Technische Aufgabe
+        - Verbesserung
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Kontext
+      description: Links, Screenshots, Kunden, Dringlichkeit – alles, was hilft.
