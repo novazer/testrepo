@@ -30,4 +30,6 @@ Expose `GET /healthz` returning `200` with body `ok`, so Kubernetes liveness and
 
 - `yarn check` (typecheck, format, tests including the new `/healthz` test) and `yarn check:licenses`.
 - `BRANCH_NAME=dev-3-health-endpoint yarn check:branch-doc`.
-- CI `Build Packages` smoke step polls `/healthz`.
+- CI `Build Packages` smoke step polls `/healthz`. The agent's token cannot push workflow files, so a DEV applies
+  this one-line change to `.github/workflows/build.yml`: `curl -fs http://localhost:3000/api/hello` →
+  `curl -fs http://localhost:3000/healthz`.
