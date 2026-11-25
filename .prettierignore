@@ -2,3 +2,4 @@ node_modules
 .yarn
 yarn.lock
 .github/ISSUE_TEMPLATE
+.yarnrc.yml
