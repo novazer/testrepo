@@ -9,6 +9,11 @@ export function createApp(): Server {
       res.end(JSON.stringify({ message: greet() }));
       return;
     }
+    if (url.pathname === '/healthz') {
+      res.writeHead(200, { 'content-type': 'text/plain' });
+      res.end('ok');
+      return;
+    }
     if (url.pathname === '/') {
       res.writeHead(200, { 'content-type': 'text/html' });
       res.end(`<!doctype html><title>Hello</title><h1>${greet()}</h1>`);

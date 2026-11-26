@@ -57,7 +57,7 @@ jobs:
       - name: Smoke test image
         run: |
           docker run -d --rm -p 3000:3000 --name smoke testrepo:${{ github.sha }}
-          for i in $(seq 1 20); do curl -fs http://localhost:3000/api/hello && break; sleep 1; done
+          for i in $(seq 1 20); do curl -fs http://localhost:3000/healthz && break; sleep 1; done
           docker stop smoke
       - name: Deploy preview (simulated)
         if: github.event_name == 'pull_request'
