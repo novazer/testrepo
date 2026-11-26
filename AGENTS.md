@@ -14,6 +14,8 @@ software factory proof of concept runs against the same process. Agents and huma
 - Read `docs/development/process.md` first. It defines the stages (Idee → Spezifikation → Bereit → Planung →
   Umsetzung → Review → Abnahme), the human gates, and the `stage:*` labels.
 - Work only in the stage your card is in: specify in `Spezifikation`, plan in `Planung`, implement in `Umsetzung`.
+- A task (label `split:task`) is one sub-issue of a spec ticket. Read the spec ticket it names for context,
+  then plan and implement only this task; never create, split or close sub-issues yourself.
 - Never start implementation without a spec the PO approved (Management Summary, acceptance criteria,
   `Priority`, `Effort`). Ask specification questions on the issue with the label `Specification Request` and stop.
 - Never commit to `master`. Work on `dev-<issue>-<short-topic>`, for example `dev-12-health-endpoint`.
