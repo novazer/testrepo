@@ -23,7 +23,9 @@ XS (< ½ day), S (~1 day), M (~3 days), L (~1 week), XL (> 1 week: split it). Th
 ## Definition of Ready
 
 An issue may leave `Spezifikation` only when it has a Management Summary, testable acceptance criteria, an
-out-of-scope section, and the PO has set `Priority` and `Effort`. The spec agent drafts all of it; the PO decides.
+out-of-scope section, and the PO has set `Priority` and `Effort`. From effort M, or with more than one
+independently mergeable change, it also has a `### Task-Schnitt` that a dev approved: task boundaries, order and
+architecture are the dev's call. The spec agent drafts all of it; PO and dev decide.
 
 ## Intake triage
 
