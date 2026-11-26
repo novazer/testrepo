@@ -2,11 +2,18 @@ import { createServer, type Server } from 'node:http';
 import { greet } from 'src/common/greeting.ts';
 
 export function createApp(): Server {
+  let helloCount = 0;
   return createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
     if (url.pathname === '/api/hello') {
+      helloCount += 1;
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ message: greet() }));
+      return;
+    }
+    if (url.pathname === '/api/hello/count') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ count: helloCount }));
       return;
     }
     if (url.pathname === '/') {
